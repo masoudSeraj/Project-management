@@ -1,0 +1,18 @@
+@layer base {
+    @font-face {
+        font-family: IRANSansFaDigits;
+
+        src: url('../../../public/storage/fonts/iransans/eot/IRANSansWeb(FaNum).eot');
+        src: url('../../../public/storage/fonts/iransans/eot/IRANSansWeb(FaNum).eot') format('embedded-opentype'), url('../../../public/storage/fonts/iransans/woff/IRANSansWeb(FaNum).woff') format('woff'), url('../../../public/storage/fonts/iransans/ttf/IRANSansWeb(FaNum).ttf') format('truetype');
+    }
+
+    h1 {
+        @apply text-5xl font-iransans ;
+    }
+    h2 {
+        @apply text-3xl font-iransans ;
+    }
+    h3 {
+        @apply text-2xl font-iransans ;
+    }
+}
