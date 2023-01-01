@@ -21,8 +21,17 @@ class TaskResource extends JsonResource
             'project_id'    =>  $this->project_id,
             'title'         =>  $this->title,
             'description'   =>  $this->description,
-            'started_at'    =>  $this->started_at,
-            'project'       =>  new ProjectResource($this->project)
+            'deadline_at'   =>  $this->deadline_at,
+            'taskStarted'    =>  $this->started_at ? true : false ,
+            'started_at'    =>  $this->started_at ?? '',
+            'paused_at'     =>  $this->paused_at ?? '',
+            'project'       =>  new ProjectResource($this->project),
+            'tasks'         =>  $this->project->tasks->map(function($task){
+                                    return ['id' => $task->id, 'value' => $task->title];
+                                }),
+            'value'         =>  $this->dependencies->map(function($task){
+                return ['id' => $task->id, 'value' => $task->title];
+            })
             // 'project'       => $this->project
         ];
     }

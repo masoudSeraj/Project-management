@@ -135,7 +135,7 @@ export default {
     components: {
         EditOutlined, 
         DynamicInput,
-        'datetime': VuePersianDatetimePicker
+        'datetime': VuePersianDatetimePicker,
     },
 };
 </script>

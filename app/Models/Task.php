@@ -2,17 +2,39 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Task extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['project_id', 'title', 'description', 'task_id', 'started_at'];
+    protected $guarded = [];
 
     public function project()
     {
         return $this->belongsTo(Project::class);
+    }
+
+    public function dependencies()
+    {
+        return $this->belongsToMany(Task::class, 'dependency_task', 'task_id', 'dependency_id')->withTimestamps();
+    }
+
+    public function parentTask()
+    {
+        return $this->belongsToMany(Task::class, 'dependency_task', 'dependency_id', 'task_id')->withTimestamps();
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'task_user');
+    }
+
+    public function sprint()
+    {
+        return $this->belongsTo(Sprint::class);
     }
 }

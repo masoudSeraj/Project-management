@@ -3,7 +3,7 @@
         <td>{{ taskName }}</td>
         <td>{{ title }}</td>
         <td>
-            <edit-modal :id="id" :name="name"></edit-modal>
+            <edit-modal :id="taskId" :name="taskName"></edit-modal>
 
             <a-button @click="confirmDelete(taskId)" type="primary" shape="circle"
                 style="backgroundColor: red; outline: red; border: red;">

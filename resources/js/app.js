@@ -13,8 +13,8 @@ import { Inertia } from '@inertiajs/inertia'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 import Antd from 'ant-design-vue';
-import momentJalali from 'moment-jalaali'
-window.momentJalali = momentJalali;
+import moment from 'moment-jalaali'
+window.moment = moment;
 // import VuePersianDatetimePicker from 'vue3-persian-datetime-picker'
 
 import 'ant-design-vue/dist/antd.css';

@@ -40,6 +40,11 @@ export default [
     label: 'Tasks'
   },
   {
+    route: 'sprint.index',
+    icon: mdiAccountGroup,
+    label: 'Sprints'
+  },
+  {
     href: 'https://github.com/balajidharma/laravel-vue-admin-panel',
     label: 'GitHub',
     icon: mdiGithub,

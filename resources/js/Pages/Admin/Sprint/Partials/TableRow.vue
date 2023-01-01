@@ -1,22 +1,16 @@
 <template>
     <tr>
-        <td>{{ projectName }}</td>
-        <td>{{ projectGuard }}</td>
-        <td class="inline-flex gap-1">
-            <edit-modal :id="id" :name="name"></edit-modal>
+        <td>{{ name }}</td>
+        <td>{{ projectTitle }}</td>
+        <td class="inline-flex">
+            <edit-modal :id="id" :name="sprintName" :projectTitle="projectTitle" ></edit-modal>
 
-            <a-button @click="confirmDelete(projectId)" type="primary" shape="circle"
+            <a-button @click="confirmDelete(sprintId)" type="primary" shape="circle"
                 style="backgroundColor: red; outline: red; border: red;">
                 <template #icon>
                     <delete-outlined />
                 </template>
             </a-button>
-
-            <add-sprint :id="id"></add-sprint>
-
-            <!-- <a-button type="primary" >
-              Edit Tasks
-            </a-button> -->
         </td>
     </tr>
 </template>
@@ -29,26 +23,26 @@ import  EditModal  from './EditModal.vue';
 import { Inertia } from '@inertiajs/inertia';
 import { notification } from 'ant-design-vue';
 import { nextTick } from '@vue/runtime-core'; 
-import AddSprint from './AddSprint.vue'
+
 
 export default{
 
-    props: ['id', 'name', 'guard'],
+    props: ['id', 'name', 'projectTitle'],
     
     data(){
         return {
-            projectId: this.id,
-            projectName: this.name,
-            projectGuard: this.guard
+            sprintId: this.id,
+            sprintName: this.name,
+            title: this.projectTitle
         }
     },
     methods: {
-        changeName(projectName){
-            this.projectName = projectName
+        changeName(sprintName){
+            this.sprintName = sprintName
         },
         confirmDelete(id){
           Modal.confirm({
-          title: () => 'Are you sure delete this Project with its associated tasks??',
+          title: () => 'Are you sure delete this Sprint??',
           icon: () => createVNode(ExclamationCircleOutlined),
           content: () => 'Are you sure to delete?',
           okText: () => 'Delete',
@@ -62,7 +56,7 @@ export default{
           },
 
           onOk() {
-            axios.delete(route('project.destroy', {'project': id}))
+            axios.delete(route('sprint.destroy', {'sprint': id}))
               .then((response) => {
                 notification.success({
                     message: response.data.message,
@@ -70,7 +64,7 @@ export default{
                 new Promise((resolve) => {
                   resolve()
                 }).then(()=>{
-                  Inertia.visit(route('project.index'), {
+                  Inertia.visit(route('task.index'), {
                     preserveScroll: true
                   });
                 })  
@@ -81,9 +75,7 @@ export default{
     },
     components: {
         DeleteOutlined,
-        EditModal,
-        AddSprint
-
+        EditModal
     }
 
 }

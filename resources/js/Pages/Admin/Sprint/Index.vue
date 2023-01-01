@@ -19,11 +19,11 @@ import Sort from "@/Components/Admin/Sort.vue"
 import { Table } from "@protonemedia/inertiajs-tables-laravel-query-builder"
 import TableRow from "./Partials/TableRow.vue"
 import { PlusOutlined } from '@ant-design/icons-vue';
-import CreateModal from './Partials/CreateModal.vue';
+// import CreateModal from './Partials/CreateModal.vue';
 import { Inertia } from '@inertiajs/inertia';
 
 const props = defineProps({
-  tasks: {
+  sprints: {
     type: Object,
     default: () => ({}),
   },
@@ -41,26 +41,26 @@ const props = defineProps({
 //   search: props.filters.search,
 // })
 
-function taskCreate(){
-  Inertia.reload({ only: ['task'] })
+function sprintCreate(){
+  Inertia.reload({ only: ['sprints'] })
 }
 </script>
 
 <template>
   <LayoutAuthenticated>
-    <Head title="Tasks" />
+    <Head title="sprints" />
     <SectionMain>
       <SectionTitleLineWithButton
         :icon="mdiAccountKey"
-        title="Tasks"
+        title="sprints"
         main
       >
 
-      <create-modal title="Add" @taskCreated="taskCreate">
+      <!-- <create-modal title="Add" @sprintCreated="sprintCreate">
           <template #icon>
             <plus-outlined />
           </template>
-        </create-modal>
+        </create-modal> -->
 
       </SectionTitleLineWithButton>
       <NotificationBar
@@ -71,7 +71,7 @@ function taskCreate(){
         {{ $page.props.flash.message }}
       </NotificationBar>
 
-      <Table :meta="tasks">
+      <Table :meta="sprints">
           <template #head>
             <tr>
               <th>Title</th>
@@ -81,7 +81,7 @@ function taskCreate(){
           </template>
 
           <template #body>
-            <table-row v-for="task in tasks.data" :key="task.id" :name=task.title :projectTitle="task.project.title" :id="task.id" />
+            <table-row v-for="sprint in sprints.data" :key="sprint.id" :name=sprint.title :projectTitle="sprint.project.title" :id="sprint.id" />
           </template>
         </Table>
     </SectionMain>
