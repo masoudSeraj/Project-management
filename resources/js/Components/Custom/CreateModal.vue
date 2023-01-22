@@ -1,5 +1,5 @@
 <template>
-    <a-button @click="visible = true" type="primary" shape="round" style="display: flex; align-items: center;">
+    <a-button @click="showModal()" type="primary" shape="round" style="display: flex; align-items: center;">
         <template #icon>
             <slot name="icon"></slot>
         </template>
@@ -14,6 +14,9 @@
             ]">
                 <a-input v-model:value="permissionName" />
             </a-form-item>
+
+           
+
         </a-form>
     </a-modal>
 </template>
@@ -21,6 +24,7 @@
 <script>
 import { nextTick } from '@vue/runtime-core';
 import { notification } from 'ant-design-vue';
+import axios from 'axios';
 
 export default {
     props: ['title'],
@@ -29,6 +33,7 @@ export default {
         return {
             visible: false,
             permissionName: '',
+
         }
     },
     methods: {
@@ -47,9 +52,11 @@ export default {
                     message: error.response.data.message,
                 });
             })
-
-
         },
+        showModal(){
+            this.visible = true;
+        },
+        
         handleOk(e) {
             console.log(e);
             this.visible = false;

@@ -2,9 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\UserController;
-use App\Http\Controllers\Api\V1\ProjectSprintTasksController;
 use App\Http\Controllers\Api\V1\SprintController;
+use App\Http\Controllers\Api\V1\PermissionController;
+use App\Http\Controllers\Api\V1\ProjectSprintTasksController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +28,8 @@ use App\Http\Controllers\Api\V1\SprintController;
 Route::group(
     [
     'prefix' => 'v1',
-    'middleware' => ['api']
+    'middleware' => ['api'],
+    'namespace' =>  'App\Http\Controllers\Api\V1'
     ],
     function(){
         Route::apiResource('user', UserController::class);
@@ -36,4 +39,6 @@ Route::group(
 
         Route::apiResource('sprint', SprintController::class);
         Route::get('sprint/index/{sprint}', [SprintController::class, 'index'])->name('sprint.index');
+        Route::apiResource('role', RoleController::class);
+        Route::apiResource('permission', PermissionController::class);
     });

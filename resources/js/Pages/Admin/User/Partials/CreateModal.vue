@@ -1,5 +1,5 @@
 <template>
-    <a-button @click="visible = true" type="primary" shape="round" style="display: flex; align-items: center;">
+    <a-button @click="showModal();" type="primary" shape="round" style="display: flex; align-items: center;">
         <template #icon>
             <slot name="icon"></slot>
         </template>
@@ -20,6 +20,23 @@
             ]">
                 <a-input v-model:value="form.email" />
             </a-form-item>
+
+            <div>
+                <a-select
+                v-model:value="form.selectedRoles"
+                mode="multiple"
+                style="width: 100%"
+                placeholder="Please select Role for this User"
+                :options="roles"
+                @change="handleChange"
+                >
+                </a-select>
+            </div>
+            <!-- <a-form-item name="email" label="Email" :rules="[
+                { required: true, message: 'Please input the email of user' },
+            ]">
+                <a-input v-model:value="form.email" />
+            </a-form-item> -->
 
             <a-form-item name="password" label="Password" :rules="[
                 { required: true, message: 'Please input the password of user!' },
@@ -51,15 +68,17 @@ export default {
                 name: '',
                 email: '',
                 password: '',
+                selectedRoles: [],
                 password_confirmation: ''
-            }
+            },
+            roles: [],
+            
         }
     },
     methods: {
          submitUser() {
             axios.post(route('user.store'), { 'user': this.form })
                 .then((response) => {
-                    // console.log(response.data)
                     this.$emit('userCreated');
                     this.$nextTick(()=>{
                         notification.success({
@@ -73,10 +92,24 @@ export default {
                     });
                 })
         },
+        showModal(){
+            this.visible = true;
+            this.$nextTick(() => {
+                axios.get(`/api/v1/role`).then((response) => {
+                    console.log(response.data);
+                    const data = response.data.data;
+                    this.roles = data;
+                    // this.tasks = data.availableTasks;
+                });
+            })
+        },
         handleOk(e) {
             console.log(e);
             this.visible = false;
         },
+        // handleChange(value, payload){
+        //     this.selectRoles = payload
+        // }
     }
 }
 </script>

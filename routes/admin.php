@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\TaskController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SprintController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ProjectTaskController;
@@ -20,7 +21,7 @@ Route::group([
     Route::get('task/start/{task}', [TaskController::class, 'start'])->name('task.start');
     Route::get('task/stop/{task}', [TaskController::class, 'stop'])->name('task.stop');
     Route::post('task/search', [TaskController::class, 'search'])->name('task.search');
-    Route::post('role/updateRole', [RoleController::class, 'updateRole'])->name('admin.role.updateRole');
+    Route::put('role/updateRole/{role}', [RoleController::class, 'updateRole'])->name('admin.role.updateRole');
     Route::post('role/details', [RoleController::class, 'details'])->name('admin.role.details');
     Route::resource('permission', 'PermissionController');
     Route::post('permission/details', [PermissionController::class, 'details'])->name('admin.permission.details');

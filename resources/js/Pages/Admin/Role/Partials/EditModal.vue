@@ -13,6 +13,18 @@
             ]">
                 <a-input v-model:value="roleName" />
             </a-form-item>
+
+            <a-form-item name="permission name" label="Permission">
+                <a-select
+                v-model:value="selectedPermissions"
+                mode="multiple"
+                style="width: 100%"
+                placeholder="Please select Permissions for this Role"
+                :options="permissions"
+                >
+                </a-select>
+            </a-form-item>
+
         </a-form>
     </a-modal>
 </template>
@@ -29,15 +41,18 @@ export default {
         return {
             visible: false,
             roleName: this.name,
+            permissions: [],
+            selectedPermissions: []
         };
     },
 
     methods: {
         updateRole(roleId) {
             axios
-                .post(route("admin.role.updateRole"), {
+                .put(route("admin.role.updateRole", {'role': roleId}), {
                     roleId: roleId,
                     roleName: this.roleName,
+                    selectedPermissions: this.selectedPermissions
                 })
                 .then((response) => {
                     notification.success({
@@ -56,7 +71,9 @@ export default {
             axios
                 .post(route("admin.role.details"), { id: roleId })
                 .then((response) => {
-                    this.roleName = response.data.role.name;
+                    this.roleName = response.data.data.name;
+                    this.selectedPermissions = response.data.data.selectedPermissions;
+                    this.permissions = response.data.data.permissions
                 });
         },
 

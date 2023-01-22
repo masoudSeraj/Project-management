@@ -19,7 +19,7 @@
           </div>
   
           <div>
-              <a-select
+            <a-select
               v-model:value="selectTasks"
               mode="multiple"
               style="width: 100%"
@@ -27,7 +27,7 @@
               :options="tasks"
               @change="handleChange"
               >
-          </a-select>
+            </a-select>
           </div>
   
   
@@ -40,17 +40,15 @@
               ></datetime>
           </div>
   
-          <div>
-              <span>deadline date</span>
-              <datetime v-model="endDate"
-              type="datetime"
-              format="YYYY-MM-DD HH:mm:ss"
-              display-format="dd jDD jMMMM jYYYY  HH:mm:ss"
-              ></datetime>
-          </div>
-          </section>
-  
-  
+            <div>
+                <span>deadline date</span>
+                <datetime v-model="endDate"
+                type="datetime"
+                format="YYYY-MM-DD HH:mm:ss"
+                display-format="dd jDD jMMMM jYYYY  HH:mm:ss"
+                ></datetime>
+            </div>
+          </section>  
       </a-modal>
     </div>
   </template>
@@ -110,7 +108,6 @@
                           axios.get(`/api/v1/sprint/index/${this.sprintId}`).then((response) => {
                               console.log(response.data);
                               const data = response.data.data;
-                            //   console.log
                               this.selectTasks = data.selectedTasks;
                               this.tasks = data.availableTasks;
                               this.startDate = data.started_at;
@@ -119,10 +116,9 @@
                               this.sprint = data.sprint
                           });
                       })
-  
                   },
-                  handleChange(value, payload){
-                      this.selectTasks = payload
+                  handleChange(){
+                    
                   }
               },
           mounted(){

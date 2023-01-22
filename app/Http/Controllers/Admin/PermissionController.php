@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Error;
+use Exception;
 use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Permission;
@@ -12,10 +14,9 @@ use Illuminate\Support\Facades\Auth;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use Illuminate\Support\Facades\Redirect;
+use App\Http\Requests\Admin\UpdateRoleRequest;
 use App\Http\Requests\Admin\StorePermissionRequest;
 use App\Http\Requests\Admin\UpdatePermissionRequest;
-use Error;
-use Exception;
 use ProtoneMedia\LaravelQueryBuilderInertiaJs\InertiaTable;
 
 class PermissionController extends Controller
@@ -136,9 +137,8 @@ class PermissionController extends Controller
     //                     ->with('message', __('Permission created successfully.'));
     // }
 
-    public function store(Request $request)
+    public function store(UpdateRoleRequest $request)
     {
-        // dd($request->all());
         try{
             Permission::create(['name' => $request->permissionName]);
         }

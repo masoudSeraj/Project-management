@@ -20,6 +20,18 @@
                 <a-input v-model:value="userEmail" />
             </a-form-item>
 
+            <div>
+                <a-select
+                v-model:value="selectedRoles"
+                mode="multiple"
+                style="width: 100%"
+                placeholder="Please select Role for this User"
+                :options="roles"
+                @change="handleChange"
+                >
+                </a-select>
+            </div>
+
             <a-form-item name="password" label="Password" :rules="[
                 { required: true, message: 'Please input the password of user!' },
             ]">
@@ -60,6 +72,8 @@ export default {
             userEmail: this.email,
             userPassword: this.password,
             userPasswordConfirm: this.passwordConfirm,
+            roles: [],
+            selectedRoles: [],
             form2: {
                 name: "",
             },
@@ -75,7 +89,8 @@ export default {
                     'email': this.userEmail,
                     'name': this.userName,
                     'password': this.userPassword,
-                    'passwordConfirm': this.userPasswordConfirm
+                    'passwordConfirm': this.userPasswordConfirm,
+                    'selectedRoles': this.selectedRoles
                 })
                 .then((response) => {
                     notification.success({
@@ -96,16 +111,22 @@ export default {
             axios
                 .get(route("user.show", { id: userId }))
                 .then((response) => {
-                    // this.form2.name = response.data.user.name;
-                    this.userName = response.data.user.name;
-                    this.userEmail =  response.data.user.email;
+                    this.userName = response.data.data.name;
+                    this.userEmail =  response.data.data.email;
+                    this.selectedRoles = response.data.data.selectedRoles;
+                    this.roles = response.data.data.roles;
                 });
         },
 
+        handleChange(){
+
+        },
+        
         handleOk(e) {
             console.log(e);
             this.visible = false;
         },
+
     },
     components: {
         EditOutlined,

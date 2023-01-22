@@ -13,6 +13,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Http\Requests\Admin\StoreRoleRequest;
 use App\Http\Requests\Admin\UpdateRoleRequest;
+use App\Http\Resources\RoleResource;
 use ProtoneMedia\LaravelQueryBuilderInertiaJs\InertiaTable;
 
 class RoleController extends Controller
@@ -130,7 +131,11 @@ class RoleController extends Controller
     public function store(StoreRoleRequest $request)
     {
         try{
-            Role::create(['name' => $request->roleName]);
+            $role = Role::create(['name' => $request->roleName]);
+
+            $request->whenFilled('selectedPermissions', function($inputs) use($role){
+                $role->givePermissionTo($inputs);
+            });
         }
         catch(\Exception $e)
         {
@@ -191,6 +196,7 @@ class RoleController extends Controller
         $permissions = $request->permissions ?? [];
         $role->syncPermissions($permissions);
 
+
         return redirect()->route('role.index')
                         ->with('message', 'Role updated successfully.');
     }
@@ -212,14 +218,17 @@ class RoleController extends Controller
 
     public function details(Request $request)
     {
-        return response()->json(['role' => Role::find($request->id)]);
+        return new RoleResource(Role::find($request->id));
     }
 
-    public function updateRole(Request $request)
+    public function updateRole(Request $request, Role $role)
     {
         try{
-            $role = Role::find($request->roleId);
             $role->name = $request->roleName;
+            $request->whenFilled('selectedPermissions', function($input) use($role){
+                $role->syncPermissions($input);
+            });
+            
             $role->save();
         }
 

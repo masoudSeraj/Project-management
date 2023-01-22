@@ -17,6 +17,7 @@ use App\Actions\Admin\User\UpdateUser;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Http\Requests\Admin\StoreUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
+use App\Http\Resources\UserResource;
 use ProtoneMedia\LaravelQueryBuilderInertiaJs\InertiaTable;
 
 class UserController extends Controller
@@ -132,6 +133,12 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        // $request->whenFilled('user.selectedRoles', function($roles){
+        //     dd($roles);
+        //     // $user->assignRole($roles);
+        // });
+        // dd($request->all());
+
         // dd($request->all());
         $request->validate([
             'user.name' => ['required', 'string', 'max:255'],
@@ -146,6 +153,7 @@ class UserController extends Controller
             'user.email.unique'     =>  'Email alredy taken!'
         ]
     );
+
         // return $request->all();
         // $user->name = $request->name;
         // $user->email = $request->email;
@@ -158,11 +166,15 @@ class UserController extends Controller
 
         // User::when($request->filled(['password', 'passwordConf']))
         try{
-            User::create([
+            $user = User::create([
                 'name' =>   $request->input('user.name'),
                 'email' =>  $request->input('user.email'),
                 'password'  =>  $request->input('user.password')
             ]);
+
+            $request->whenFilled('user.selectedRoles', function($roles) use($user){
+                $user->assignRole($roles);
+            });
         }
         catch(\Exception $e)
         {
@@ -185,9 +197,10 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return response()->json([
-            'user'  => $user
-        ]);
+        return new UserResource($user);
+        // return response()->json([
+        //     'user'  => $user
+        // ]);
         // $roles = Role::all()->pluck("name","id");
         // $userHasRoles = array_column(json_decode($user->roles, true), 'id');
 
@@ -234,13 +247,23 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        // dd($request->all());
+        // dd($request->collect('selectedRoles')->pluck('value'));
+        // $request->whenFilled('selectedRoles', function($roles) use($user){
+        //     // $user->assignRole(collect($roles)->pluck('value'));
+        //     dd($roles);
+        // });
+
         try{
             $user->name = $request->name;
             $user->email = $request->email;
             
-            $request->filled(['password', 'passwordConfirm'], function() use($user, $request){
+            $request
+            ->whenFilled(['password', 'passwordConfirm'], function() use($user, $request){
                 $user->password = bcrypt($request->password);
+            })
+            ->whenFilled('selectedRoles', function($roles) use($user){
+
+                $user->syncRoles($roles);
             });
 
             $user->save();

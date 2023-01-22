@@ -8,7 +8,7 @@ const year = computed(() => new Date().getFullYear())
 </script>
 
 <template>
-  <footer class="py-2 px-6">
+  <!-- <footer class="py-2 px-6">
     <BaseLevel :class="containerMaxW">
       <div class="text-center md:text-left">
         <b>&copy;{{ year }}, <a
@@ -27,5 +27,5 @@ const year = computed(() => new Date().getFullYear())
         </a>
       </div>
     </BaseLevel>
-  </footer>
+  </footer> -->
 </template>

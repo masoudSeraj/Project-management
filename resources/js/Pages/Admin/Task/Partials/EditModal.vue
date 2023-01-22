@@ -49,7 +49,7 @@
             </div>
 
             <div class="w-1/2">
-                <div class=" mr-1 mb-2"><span class="text-red-500">*</span> Tasks:</div>
+                <div class="mr-1 mb-2"><span class="text-red-500">*</span> Tasks:</div>
                 
                   <a-select
                     v-model:value="value"
@@ -70,7 +70,6 @@
                 <template v-else>
                     <pause-outlined @click="pause(id)" :style="{fontSize: '100px', color: 'yellow', cursor: 'pointer'}"/>
                     <div class="flex"><span>در تاریخ <span v-text="convertDate(started_at)"></span> آغاز شده است</span>   </div>
-                    
                 </template>
             </div>
         </section>

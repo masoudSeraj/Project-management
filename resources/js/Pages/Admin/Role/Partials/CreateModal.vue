@@ -1,5 +1,5 @@
 <template>
-    <a-button @click="visible = true" type="primary" shape="round" style="display: flex; align-items: center;">
+    <a-button @click="showModal()" type="primary" shape="round" style="display: flex; align-items: center;">
         <template #icon>
             <slot name="icon"></slot>
         </template>
@@ -14,6 +14,19 @@
             ]">
                 <a-input v-model:value="roleName" />
             </a-form-item>
+
+            
+            <a-form-item name="permission name" label="Permission">
+                <a-select
+                v-model:value="selectedPermissions"
+                mode="multiple"
+                style="width: 100%"
+                placeholder="Please select Permissions for this Role"
+                :options="permissions"
+                >
+                </a-select>
+            </a-form-item>
+            
         </a-form>
     </a-modal>
 </template>
@@ -29,11 +42,13 @@ export default {
         return {
             visible: false,
             roleName: '',
+            permissions: [],
+            selectedPermissions: []
         }
     },
     methods: {
          submitRole() {
-            axios.post(route('role.store'), { 'roleName': this.roleName })
+            axios.post(route('role.store'), { 'roleName': this.roleName, 'selectedPermissions': this.selectedPermissions })
                 .then((response) => {
                     console.log(response.data)
                     this.$emit('roleCreated');
@@ -48,6 +63,15 @@ export default {
                         message: error.response.data.message,
                     });
                 })
+        },
+        showModal(){
+            this.visible = true;
+
+            this.$nextTick(()=>{
+                axios.get('/api/v1/permission').then((response) => {
+                    this.permissions = response.data.data;
+                });
+            })
         },
         handleOk(e) {
             console.log(e);
