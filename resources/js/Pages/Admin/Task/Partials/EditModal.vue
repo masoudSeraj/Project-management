@@ -63,7 +63,7 @@
                 <user-task v-model="selectedUsers" :taskId="id" @user-selected="userSelected"></user-task>
                 
 
-                <template v-if="!taskStarted">
+                <template v-if="!started_at">
                     <caret-right-outlined @click="start(id)" :style="{fontSize: '100px', color: '#08c', cursor: 'pointer'}"/>
                     <div class="flex"><span>در تاریخ <span v-text="convertDate(paused_at)"></span> متوقف شده است</span>   </div>
                 </template>
@@ -99,7 +99,7 @@ export default {
             tasks: [{id: '', value: ''}],
             deadline: '',
             status: null,
-            taskStarted: null,
+            // taskStarted: null,
             started_at: '',
             paused_at: '',
         }
@@ -119,7 +119,7 @@ export default {
                     this.deadline = data.deadline_at;
                     this.status = data.status;
                     this.tasks = data.tasks;
-                    this.taskStarted = data.taskStarted;
+                    // this.taskStarted = data.taskStarted;
                     this.started_at = data.started_at;
                     this.paused_at = data.paused_at;
                     this.value = data.value
@@ -178,9 +178,10 @@ export default {
             this.status = value;
         },
         convertDate(date){
-            return moment(date).format('jYYYY/jM/jD h:m:s');
+            return date ? moment(date).format('jYYYY/jM/jD h:m:s') : '';
         }
     },
+    mounted(){console.log('yes')},
     components: {
         EditOutlined, 
         DynamicInput,

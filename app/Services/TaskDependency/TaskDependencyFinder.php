@@ -10,4 +10,9 @@ class TaskDependencyFinder implements TaskDependencyFinderInterface {
     {   
         return $task->parentTask()->exists();
     }
+
+    public function parentTaskNotFinished(Task $task)
+    {
+        return $task->parentTask->status != 'Active';
+    }
 }

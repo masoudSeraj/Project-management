@@ -146,18 +146,20 @@ class TaskController extends Controller
                 'started_at'    => 'nullable',
                 'paused_at'     => ['nullable', Rule::requiredIf(isset($request->paused_at))],
                 'started_at'    => ['nullable', Rule::requiredIf(isset($request->started_at))],
-                'deadline'       =>  'required'
+                'deadline'       =>  'required',
+                'status'        =>  'required'
             ]);
     
             $task->title = $request->taskName;
             $task->description = $request->taskDescription;
             $request->whenFilled($request->started_at, function() use($task, $request){
                 $task->started_at = $request->started_at;
-            })->whenFilled($request->started_at, function() use($task, $request){
+            })->whenFilled($request->paused_at, function() use($task, $request){
                 $task->paused_at = $request->paused_at;
             });
     
             $task->status = $request->status;
+            
             $task->deadline_at = $request->deadline;
 
             $request->whenFilled('started_at', function() use($finder, $task){

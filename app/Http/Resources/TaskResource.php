@@ -22,9 +22,10 @@ class TaskResource extends JsonResource
             'title'         =>  $this->title,
             'description'   =>  $this->description,
             'deadline_at'   =>  $this->deadline_at,
-            'taskStarted'    =>  $this->started_at ? true : false ,
+            'taskStarted'   =>  $this->started_at ? true : false ,
             'started_at'    =>  $this->started_at ?? '',
             'paused_at'     =>  $this->paused_at ?? '',
+            'status'        =>  $this->status,
             'project'       =>  new ProjectResource($this->project),
             'tasks'         =>  $this->project->tasks->map(function($task){
                                     return ['id' => $task->id, 'value' => $task->title];
