@@ -51,6 +51,10 @@ const activeInactiveStyle = computed(
     ? styleStore.asideMenuItemActiveStyle
     : ''
 )
+
+function logout(){
+  console.log('yes');
+}
 </script>
 
 <template>
@@ -71,7 +75,7 @@ const activeInactiveStyle = computed(
         w="w-16"
         :size="18"
       />
-      <span
+      <span @click="logout"
         class="grow text-ellipsis line-clamp-1"
         :class="activeInactiveStyle"
       >{{ item.label }}</span>

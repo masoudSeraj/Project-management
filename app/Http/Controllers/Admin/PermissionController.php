@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use Illuminate\Support\Facades\Redirect;
+use App\Http\Requests\Admin\StoreRoleRequest;
 use App\Http\Requests\Admin\UpdateRoleRequest;
 use App\Http\Requests\Admin\StorePermissionRequest;
 use App\Http\Requests\Admin\UpdatePermissionRequest;
@@ -21,13 +22,13 @@ use ProtoneMedia\LaravelQueryBuilderInertiaJs\InertiaTable;
 
 class PermissionController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('can:permission list', ['only' => ['index', 'show']]);
-        $this->middleware('can:permission create', ['only' => ['create', 'store']]);
-        $this->middleware('can:permission edit', ['only' => ['edit', 'update']]);
-        $this->middleware('can:permission delete', ['only' => ['destroy']]);
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('can:permission list', ['only' => ['index', 'show']]);
+    //     $this->middleware('can:permission create', ['only' => ['create', 'store']]);
+    //     $this->middleware('can:permission edit', ['only' => ['edit', 'update']]);
+    //     $this->middleware('can:permission delete', ['only' => ['destroy']]);
+    // }
 
     /**
      * Display a listing of the resource.
@@ -137,8 +138,12 @@ class PermissionController extends Controller
     //                     ->with('message', __('Permission created successfully.'));
     // }
 
-    public function store(UpdateRoleRequest $request)
+    public function store(Request $request)
     {
+        $request->validate([
+            'permissionName' => 'required|string|max:255|unique:permissions,name',
+        ]);
+        // dd($request->all());
         try{
             Permission::create(['name' => $request->permissionName]);
         }

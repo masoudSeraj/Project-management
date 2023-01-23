@@ -30,7 +30,6 @@
             </a-select>
           </div>
   
-  
           <div>
               <span>start date</span>
               <datetime v-model="startDate"

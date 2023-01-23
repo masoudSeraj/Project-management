@@ -1,49 +1,13 @@
-<script setup>
-import { onMounted, ref } from 'vue'
-import { Head, Link, Inertia, defineProps } from '@inertiajs/inertia-vue3';
-// import { ref } from 'vue';
-import Project from '@/Components/Project.vue';
-
-const props = defineProps({
-    canLogin: Boolean,
-    canRegister: Boolean,
-    laravelVersion: String,
-    phpVersion: String,
-    projects: Object
-})
-let visible = ref(false);
-
-function showModal(event){
-    visible.value = true;
-    console.log(event)
-
-}
-
-function showTasks(event){
-    // console.log(event)
-    // visible = true;
-}
-
-function handleOk(){
-    visible.value=false;
-    console.log('yes');
-}
-
-onMounted(() => {
-  console.log()
-})
-</script>
-
 <template>
     <Head title="Welcome" />
 
     <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0">
         <div v-if="canLogin" class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
-            <Link v-if="$page.props.auth.user" :href="route('dashboard')" class="text-sm text-gray-700 underline">
+            <Link v-if="$page.props.auth.user && $page.props.auth.user.roles.filter((role)=>{ return role.name == 'admin' }).length > 0" :href="route('dashboard')" class="text-sm text-gray-700 underline">
                 Dashboard
             </Link>
 
-            <template v-else>
+            <template v-else-if="!$page.props.auth.user">
                 <Link :href="route('login')" class="text-sm text-gray-700 underline">
                     Log in
                 </Link>
@@ -52,32 +16,66 @@ onMounted(() => {
                     Register
                 </Link>
             </template>
+
+            <Link v-else method="post" :href="route('logout')" class="text-sm text-gray-700 underline">
+                logout
+            </Link>
         </div>
-        <template >
+        <!-- <template >
+            <div v-text="console.log($page.props)">
+
+            </div>
+        </template> -->
+        <template v-if="!$page.props.auth.user">
+            لطفا برای نمایش وضعیت پروژه ها در سایت ثبت نام کنید.
+        </template>
+        
+        <template v-else-if="projects.data.length && $page.props.auth != undefined">
+            <div class="flex gap-4 container mx-auto">
+                <Project v-for="(project, index) in projects.data" :key="project.id" 
+                    :started_at="project.started_at"
+                    :deadline_at="project.deadline_at"
+                    :title="project.title"
+                    :status="project.status"
+                    :description="project.description"
+                    >
+                </Project>
+            </div>
 
         </template>
-        <Project v-for="(project, index) in projects.data" :key="project.id" 
-            :started_at="project.started_at"
-            :deadline_at="project.deadline_at"
-            :title="project.title"
-            :status="project.status"
-            :description="project.description"
-            >
-            <!-- <Modal></Modal> -->
-            <!-- <template #content>
-                <div>
-                    <a-modal v-model:visible="visible" title="Basic Modal" @ok="handleOk" @cancel="handleCancel">
-                        <p>{{ project.title }}</p>
-                    </a-modal>
-                    <p v-modal:visible="visible"></p>
-                </div>
-            </template> -->
+        <template v-else>
+            در حال حاضر در هیچ پروژه ای مشارکت ندارید.
+        </template>
 
-
-        </Project>
 
     </div>
 </template>
+
+<script>
+import { Head, Link, Inertia } from '@inertiajs/inertia-vue3';
+import Project from '@/Components/Project.vue';
+
+export default {
+    props: {
+        canLogin: Boolean,
+        canRegister: Boolean,
+        laravelVersion: String,
+        phpVersion: String,
+        projects: Object
+    },
+    data(){
+        return {}
+    },
+    methods:{},
+    mounted(){
+        // console.log(this.$page.props.auth.user.roles.filter((role)=>{ return role.name == 'admin' }).length > 0)
+        console.log(this.$page.props.auth)
+    },
+    components: {
+        Project, Link, Head
+    }
+}
+</script>
 
 <style scoped>
     .bg-gray-100 {

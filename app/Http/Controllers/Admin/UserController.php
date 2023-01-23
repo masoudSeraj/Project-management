@@ -247,12 +247,6 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        // dd($request->collect('selectedRoles')->pluck('value'));
-        // $request->whenFilled('selectedRoles', function($roles) use($user){
-        //     // $user->assignRole(collect($roles)->pluck('value'));
-        //     dd($roles);
-        // });
-
         try{
             $user->name = $request->name;
             $user->email = $request->email;
@@ -262,7 +256,6 @@ class UserController extends Controller
                 $user->password = bcrypt($request->password);
             })
             ->whenFilled('selectedRoles', function($roles) use($user){
-
                 $user->syncRoles($roles);
             });
 

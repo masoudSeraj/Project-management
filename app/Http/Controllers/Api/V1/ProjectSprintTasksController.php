@@ -7,6 +7,7 @@ use App\Models\Task;
 use App\Models\Sprint;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use App\Services\TaskService\TaskService;
 use App\Http\Resources\ProjectSprintTasksCollection;
@@ -34,7 +35,9 @@ class ProjectSprintTasksController extends Controller
         // dd($request->all());
         $request->validate([
             'sprint'    => 'required',
-            'degree'    =>  'required|unique:sprints',
+            'degree'    =>  ['required', Rule::unique('sprints')->where(function($query) use($project){
+                $query->where('project_id', $project->id);
+            })],
             'tasks.*'   =>  'required',
             'startDate' =>  'required',
             'endDate'   =>  'required'

@@ -105,7 +105,8 @@ class ProjectController extends Controller
             'projectName'   => $project->title,
             'projectDescription'    =>  $project->description,
             'date'  => $project->deadline_at,
-            'status'    => $project->status
+            'status'    => $project->status,
+            'projectTasks'  =>  $project->tasks()->with('sprint')->get(),
         ]);
     }
 

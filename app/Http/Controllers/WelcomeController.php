@@ -16,8 +16,9 @@ class WelcomeController extends Controller
     public function index()
     {
         $projects = ProjectResource::collection(Project::whereHas('tasks.users', function($query){
-            return $query->where('users.id', auth()->user()->id);
+            return $query->where('users.id', auth()->user()?->id);
         })->get());
+        
         return Inertia::render('Welcome', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
