@@ -23,10 +23,10 @@
                                 <span>sprint</span>
                             </div>
                             <div class="flex flex-col text-xs mt-2">
-                                <!-- <span>{{ sprint.title ?? '' }}</span> -->
-                                <span>Level: {{ sprint.degree ?? '' }} </span>
-                                <span>started at: {{ sprint.started_at ?? '' }}</span>
-                                <span>deadline at: {{ sprint.deadline_at ?? '' }}</span>
+                                <span>{{ taskSprint?.title ?? 'Not Set' }}</span>
+                                <span>Level: {{ taskSprint?.degree ?? 'Not Set' }} </span>
+                                <span>started at: {{ taskSprint?.started_at ?? 'Not Set' }}</span>
+                                <span>deadline at: {{ taskSprint?.deadline_at ?? 'Not Set' }}</span>
                             </div>
                         </div>
                        </div>
