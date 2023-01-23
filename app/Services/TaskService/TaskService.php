@@ -20,20 +20,6 @@ class TaskService
         return $project?->sprints()->orderBy('degree', 'DESC')->first()->degree;
     }
 
-    // public function sprintTasks(Sprint $sprint)
-    // {
-    //     return [
-    //             ['availableTasks' => $sprint->project->tasks->map(function($value){
-    //                     return ['id' => $value['id'], 'value' => $value['title']];
-    //                 })->whereNotIn('id', $sprint->tasks->pluck('id'))->values()
-    //             ],
-    //             ['selectedTasks' => $sprint->tasks->map(function($value){
-    //                 return ['id' => $value['id'], 'value' => $value['title']];
-    //             })
-    //             ]
-    //         ];
-    // }
-
     
     private function tasksBySprint($project)
     {

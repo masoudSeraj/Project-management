@@ -18,7 +18,7 @@ window.moment = moment;
 // import VuePersianDatetimePicker from 'vue3-persian-datetime-picker'
 
 import 'ant-design-vue/dist/antd.css';
-import 'ant-design-vue/'
+import 'ant-design-vue/';
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
 const pinia = createPinia()

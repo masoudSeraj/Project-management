@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Role;
 use App\Models\Task;
+use App\Models\Permission;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
@@ -46,5 +48,10 @@ class User extends Authenticatable
     public function tasks()
     {
         return $this->belongsToMany(Task::class, 'task_user');
+    }
+
+    public function isAdmin()
+    {
+        return $this->hasAnyRole(Role::ADMIN);
     }
 }

@@ -12,4 +12,5 @@ class Permission extends OriginalPermission
         'updated_at',
         'created_at',
     ];
+
 }

@@ -11,7 +11,7 @@ use App\Http\Controllers\Admin\ProjectTaskController;
 Route::group([
     'namespace' => 'App\Http\Controllers\Admin',
     'prefix' => 'admin',
-    'middleware' => ['auth'],
+    'middleware' => ['auth', 'isAdmin'],
 ], function () {
     Route::resource('user', 'UserController');
     Route::resource('role', 'RoleController');

@@ -12,4 +12,5 @@ class Role extends OriginalRole
         'updated_at',
         'created_at',
     ];
+    public const ADMIN = ['admin', 'super admin', 'admininstrator'];
 }

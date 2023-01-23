@@ -71,7 +71,7 @@ export default {
             axios
                 .post(route("admin.role.details"), { id: roleId })
                 .then((response) => {
-                    this.roleName = response.data.data.name;
+                    this.roleName = response.data.data.value;
                     this.selectedPermissions = response.data.data.selectedPermissions;
                     this.permissions = response.data.data.permissions
                 });

@@ -27,7 +27,6 @@
                 style="width: 100%"
                 placeholder="Please select Role for this User"
                 :options="roles"
-                @change="handleChange"
                 >
                 </a-select>
             </div>
@@ -111,15 +110,12 @@ export default {
             axios
                 .get(route("user.show", { id: userId }))
                 .then((response) => {
+                    console.log(response.data);
                     this.userName = response.data.data.name;
                     this.userEmail =  response.data.data.email;
                     this.selectedRoles = response.data.data.selectedRoles;
                     this.roles = response.data.data.roles;
                 });
-        },
-
-        handleChange(){
-
         },
         
         handleOk(e) {

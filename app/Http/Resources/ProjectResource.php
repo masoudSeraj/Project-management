@@ -18,7 +18,10 @@ class ProjectResource extends JsonResource
             'id'            =>  $this->id,
             'title'         =>  $this->title,
             'description'   =>  $this->description,
-            'status'        =>  $this->status
+            'status'        =>  $this->status,
+            'started_at'    =>  (string) verta($this->created_at, 'Asia/Tehran'),
+            'deadline_at'   =>  (string) verta($this->deadline_at, 'Asia/Tehran'),
+            'changed_at'    =>  $this->changed_at
         ];
     }
 }
