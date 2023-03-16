@@ -70,6 +70,7 @@ export default {
     mounted(){
         // console.log(this.$page.props.auth.user.roles.filter((role)=>{ return role.name == 'admin' }).length > 0)
         console.log(this.$page.props.auth)
+        console.log(window.matchMedia('(prefers-color-scheme: dark)').matches);
     },
     components: {
         Project, Link, Head
@@ -113,7 +114,7 @@ export default {
         color: rgba(26, 32, 44, var(--tw-text-opacity));
     }
 
-    @media (prefers-color-scheme: dark) {
+    /* @media (prefers-color-scheme: dark) {
         .dark\:bg-gray-800 {
             background-color: #2d3748;
             background-color: rgba(45, 55, 72, var(--tw-bg-opacity));
@@ -138,5 +139,5 @@ export default {
             color: #cbd5e0;
             color: rgba(203, 213, 224, var(--tw-text-opacity));
         }
-    }
+    } */
 </style>

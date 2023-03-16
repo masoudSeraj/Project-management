@@ -82,35 +82,6 @@ class PermissionController extends Controller
             ->withGlobalSearch()
             ->defaultSort('name');
     });
-        // $permissions = (new Permission)->newQuery();
-
-        // if (request()->has('search')) {
-        //     $permissions->where('name', 'Like', '%'.request()->input('search').'%');
-        // }
-
-        // if (request()->query('sort')) {
-        //     $attribute = request()->query('sort');
-        //     $sort_order = 'ASC';
-        //     if (strncmp($attribute, '-', 1) === 0) {
-        //         $sort_order = 'DESC';
-        //         $attribute = substr($attribute, 1);
-        //     }
-        //     $permissions->orderBy($attribute, $sort_order);
-        // } else {
-        //     $permissions->latest();
-        // }
-
-        // $permissions = $permissions->paginate(5)->onEachSide(2)->appends(request()->query());
-
-        // return Inertia::render('Admin/Permission/Index', [
-        //     'permissions' => $permissions,
-        //     'filters' => request()->all('search'),
-        //     'can' => [
-        //         'create' => Auth::user()->can('permission create'),
-        //         'edit' => Auth::user()->can('permission edit'),
-        //         'delete' => Auth::user()->can('permission delete'),
-        //     ]
-        // ]);
     }
 
     /**
@@ -122,21 +93,6 @@ class PermissionController extends Controller
     {
         return Inertia::render('Admin/Permission/Create');
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\Admin\StorePermissionRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    // public function store(StorePermissionRequest $request)
-    // {
-    //     dd($request);
-    //     Permission::create($request->all());
-
-    //     return redirect()->route('permission.index')
-    //                     ->with('message', __('Permission created successfully.'));
-    // }
 
     public function store(Request $request)
     {
@@ -180,21 +136,6 @@ class PermissionController extends Controller
             'permission' => $permission,
         ]);
     }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\Admin\UpdatePermissionRequest  $request
-     * @param  \App\Models\Permission  $permission
-     * @return \Illuminate\Http\Response
-     */
-    // public function update(UpdatePermissionRequest $request, Permission $permission)
-    // {
-    //     $permission->update($request->all());
-
-    //     return redirect()->route('permission.index')
-    //                     ->with('message', __('Permission updated successfully.'));
-    // }
 
     /**
      * Remove the specified resource from storage.

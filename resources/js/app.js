@@ -51,7 +51,12 @@ const layoutStore = useLayoutStore(pinia)
 styleStore.setStyle(localStorage[styleKey] ?? 'basic')
 
 /* Dark mode */
-if ((!localStorage[darkModeKey] && window.matchMedia('(prefers-color-scheme: dark)').matches) || localStorage[darkModeKey] === '1') {
+if (
+  // (!localStorage[darkModeKey] 
+  // && 
+  // window.matchMedia('(prefers-color-scheme: dark)').matches
+  // ) || 
+  localStorage[darkModeKey] === '1') {
   styleStore.setDarkMode(true)
 }
 

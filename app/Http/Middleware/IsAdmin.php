@@ -24,6 +24,7 @@ class IsAdmin
             return $next($request);
 
         }
+        // dd(Auth::user()->getPermissionNames());
         return redirect()->route('home');
     }
 }
