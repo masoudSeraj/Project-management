@@ -14,6 +14,8 @@
                 <a-input v-model:value="roleName" />
             </a-form-item>
 
+            <a-checkbox v-model:checked="isAdmin">Make Admin</a-checkbox>
+
             <a-form-item name="permission name" label="Permission">
                 <a-select
                 v-model:value="selectedPermissions"
@@ -42,7 +44,8 @@ export default {
             visible: false,
             roleName: this.name,
             permissions: [],
-            selectedPermissions: []
+            selectedPermissions: [],
+            isAdmin: false
         };
     },
 

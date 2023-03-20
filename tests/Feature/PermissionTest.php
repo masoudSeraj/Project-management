@@ -18,18 +18,6 @@ class PermissionTest extends TestCase
     use RefreshDatabase;
     use HasRoles;
 
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function test_example()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
     public function test_admin_can_visit_permissions_page()
     {
         $user = User::factory()->create();

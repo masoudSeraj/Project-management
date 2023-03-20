@@ -5,15 +5,10 @@ import { createVNode, ref } from 'vue';
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue"
 import SectionMain from "@/Components/SectionMain.vue"
 import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue"
-import BaseButton from "@/Components/BaseButton.vue"
-import CardBox from "@/Components/CardBox.vue"
 import NotificationBar from "@/Components/NotificationBar.vue";
-import Pagination from "@/Components/Admin/Pagination.vue";
-import Sort from "@/Components/Admin/Sort.vue";
 import { Inertia } from '@inertiajs/inertia';
 import { Table } from "@protonemedia/inertiajs-tables-laravel-query-builder";
 import TableRow from "@/Components/Custom/TableRow.vue";
-import axios from "axios";
 import { PlusOutlined } from '@ant-design/icons-vue';
 import CreateModal from '@/Components/Custom/CreateModal.vue';
 import {
@@ -57,11 +52,14 @@ function permissionCreated(){
         title="Permissions"
         main
       >
+      <span dusk="addPermission" id="add-permission">
         <create-modal title="Add" @permissionCreated="permissionCreated">
           <template #icon>
             <plus-outlined />
           </template>
         </create-modal>
+      </span>
+
         
       </SectionTitleLineWithButton>
       <NotificationBar

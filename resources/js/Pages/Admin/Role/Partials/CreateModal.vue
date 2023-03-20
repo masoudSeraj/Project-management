@@ -9,24 +9,25 @@
     <a-modal v-model:visible="visible" title="Create a new collection" ok-text="Create" cancel-text="Cancel"
         @ok="submitRole">
         <a-form layout="vertical" name="form_in_modal">
-            <a-form-item name="role name" label="Title" :rules="[
-                { required: true, message: 'Please input the title of collection!' },
-            ]">
-                <a-input v-model:value="roleName" />
-            </a-form-item>
+            <div class="flex justify-between items-center">
+                <a-form-item name="role name" label="Title" :rules="[
+                    { required: true, message: 'Please input the title of collection!' },
+                ]">
+                    <a-input v-model:value="roleName" />
 
-            
+                </a-form-item>
+                <a-checkbox v-model:checked="isAdmin">Make Admin</a-checkbox>
+
+            </div>
+
+
+
             <a-form-item name="permission name" label="Permission">
-                <a-select
-                v-model:value="selectedPermissions"
-                mode="multiple"
-                style="width: 100%"
-                placeholder="Please select Permissions for this Role"
-                :options="permissions"
-                >
+                <a-select v-model:value="selectedPermissions" mode="multiple" style="width: 100%"
+                    placeholder="Please select Permissions for this Role" :options="permissions">
                 </a-select>
             </a-form-item>
-            
+
         </a-form>
     </a-modal>
 </template>
@@ -43,31 +44,36 @@ export default {
             visible: false,
             roleName: '',
             permissions: [],
-            selectedPermissions: []
+            selectedPermissions: [],
+            isAdmin: false
         }
     },
     methods: {
-         submitRole() {
-            axios.post(route('role.store'), { 'roleName': this.roleName, 'selectedPermissions': this.selectedPermissions })
+        submitRole() {
+            axios.post(route('role.store'), {
+                'roleName': this.roleName,
+                'selectedPermissions': this.selectedPermissions,
+                'isAdmin': this.isAdmin
+
+            })
                 .then((response) => {
-                    console.log(response.data)
                     this.$emit('roleCreated');
-                    this.$nextTick(()=>{
+                    this.$nextTick(() => {
                         notification.success({
                             message: response.data.message,
                         });
                     })
                 })
-                .catch((error)=>{
+                .catch((error) => {
                     notification.error({
                         message: error.response.data.message,
                     });
                 })
         },
-        showModal(){
+        showModal() {
             this.visible = true;
 
-            this.$nextTick(()=>{
+            this.$nextTick(() => {
                 axios.get('/api/v1/permission').then((response) => {
                     this.permissions = response.data.data;
                 });

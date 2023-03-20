@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Permission>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Role>
  */
-class PermissionFactory extends Factory
+class RoleFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,7 +18,7 @@ class PermissionFactory extends Factory
     {
         return [
             'name'  => fake()->words(rand(4, 8)),
-            'guard_name'   => 'web'
+            'guard_name'   => 'web',
         ];
     }
 }

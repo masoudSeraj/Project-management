@@ -20,11 +20,9 @@ class IsAdmin
     public function handle(Request $request, Closure $next)
     {
         if(Auth::user()->isAdmin())
-        {
+        {        
             return $next($request);
-
         }
-        // dd(Auth::user()->getPermissionNames());
         return redirect()->route('home');
     }
 }

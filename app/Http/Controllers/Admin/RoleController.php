@@ -18,13 +18,13 @@ use ProtoneMedia\LaravelQueryBuilderInertiaJs\InertiaTable;
 
 class RoleController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('can:role list', ['only' => ['index', 'show']]);
-        $this->middleware('can:role create', ['only' => ['create', 'store']]);
-        $this->middleware('can:role edit', ['only' => ['edit', 'update']]);
-        $this->middleware('can:role delete', ['only' => ['destroy']]);
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('can:role list', ['only' => ['index', 'show']]);
+    //     $this->middleware('can:role create', ['only' => ['create', 'store']]);
+    //     $this->middleware('can:role edit', ['only' => ['edit', 'update']]);
+    //     $this->middleware('can:role delete', ['only' => ['destroy']]);
+    // }
 
     /**
      * Display a listing of the resource.
@@ -77,35 +77,6 @@ class RoleController extends Controller
             ->withGlobalSearch()
             ->defaultSort('name');
     });
-        // $roles = (new Role)->newQuery();
-
-        // if (request()->has('search')) {
-        //     $roles->where('name', 'Like', '%'.request()->input('search').'%');
-        // }
-
-        // if (request()->query('sort')) {
-        //     $attribute = request()->query('sort');
-        //     $sort_order = 'ASC';
-        //     if (strncmp($attribute, '-', 1) === 0) {
-        //         $sort_order = 'DESC';
-        //         $attribute = substr($attribute, 1);
-        //     }
-        //     $roles->orderBy($attribute, $sort_order);
-        // } else {
-        //     $roles->latest();
-        // }
-
-        // $roles = $roles->paginate(5)->onEachSide(2)->appends(request()->query());
-
-        // return Inertia::render('Admin/Role/Index', [
-        //     'roles' => $roles,
-        //     'filters' => request()->all('search'),
-        //     'can' => [
-        //         'create' => Auth::user()->can('role create'),
-        //         'edit' => Auth::user()->can('role edit'),
-        //         'delete' => Auth::user()->can('role delete'),
-        //     ]
-        // ]);
     }
 
     /**
@@ -130,8 +101,9 @@ class RoleController extends Controller
      */
     public function store(StoreRoleRequest $request)
     {
+        // dd($request->all());
         try{
-            $role = Role::create(['name' => $request->roleName]);
+            $role = Role::create(['name' => $request->roleName, 'is_admin' => $request->isAdmin]);
 
             $request->whenFilled('selectedPermissions', function($inputs) use($role){
                 $role->givePermissionTo($inputs);
@@ -143,25 +115,8 @@ class RoleController extends Controller
         }
         
         return response()->json([
-            'message'   =>  'Role successfully added'
-        ]);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Role  $role
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Role $role)
-    {
-        $permissions = Permission::all()->pluck("name","id");
-        $roleHasPermissions = array_column(json_decode($role->permissions, true), 'id');
-
-        return Inertia::render('Admin/Role/Show', [
-            'role' => $role,
-            'permissions' => $permissions,
-            'roleHasPermissions' => $roleHasPermissions,
+            'message'   =>  'Role successfully added',
+            'roleId'   => $role->id
         ]);
     }
 
@@ -173,7 +128,7 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-        $permissions = Permission::all()->pluck("name","id");
+        $permissions = Permission::all()->pluck("name", "id");
         $roleHasPermissions = array_column(json_decode($role->permissions, true), 'id');
 
         return Inertia::render('Admin/Role/Edit', [
@@ -183,23 +138,6 @@ class RoleController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\Admin\UpdateRoleRequest  $request
-     * @param  \App\Models\Role  $role
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateRoleRequest $request, Role $role)
-    {
-        $role->update($request->all());
-        $permissions = $request->permissions ?? [];
-        $role->syncPermissions($permissions);
-
-
-        return redirect()->route('role.index')
-                        ->with('message', 'Role updated successfully.');
-    }
 
     /**
      * Remove the specified resource from storage.
@@ -225,6 +163,7 @@ class RoleController extends Controller
     {
         try{
             $role->name = $request->roleName;
+            $role->is_admin = $request->isAdmin;
             $request->whenFilled('selectedPermissions', function($input) use($role){
                 $role->syncPermissions($input);
             });
@@ -237,7 +176,8 @@ class RoleController extends Controller
         }
 
         return response()->json([
-            'message'   =>  'role successfully editted'
+            'message'   =>  'role successfully editted',
+            'roleId' => $role->id
         ]);
     }
 }

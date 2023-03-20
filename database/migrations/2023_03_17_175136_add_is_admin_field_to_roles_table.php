@@ -13,9 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('tasks', function (Blueprint $table) {
-            $table->datetime('deadline_at')->after('description')->nullable();
-            $table->string('status')->after('description')->nullable();
+        Schema::table('roles', function (Blueprint $table) {
+            $table->boolean('is_admin')->after('name')->default(0);
         });
     }
 
@@ -26,9 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('tasks', function (Blueprint $table) {
-            $table->dropColumn('status');
-            $table->dropColumn('deadline_at');
+        Schema::table('roles', function (Blueprint $table) {
+            $table->dropColumn('is_admin');
         });
     }
 };

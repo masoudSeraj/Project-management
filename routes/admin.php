@@ -3,10 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\TaskController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\SprintController;
 use App\Http\Controllers\Admin\PermissionController;
-use App\Http\Controllers\Admin\ProjectTaskController;
 
 Route::group([
     'namespace' => 'App\Http\Controllers\Admin',
