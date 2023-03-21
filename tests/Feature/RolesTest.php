@@ -6,6 +6,7 @@ use Tests\TestCase;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Permission;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Testing\AssertableInertia;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Foundation\Testing\WithFaker;

@@ -165,6 +165,7 @@ class UserController extends Controller
     }
     public function update(Request $request, User $user)
     {
+        // dd($request);
         try{
             $user->name = $request->name;
             $user->email = $request->email;
