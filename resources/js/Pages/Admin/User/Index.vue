@@ -63,15 +63,7 @@ function userCreate(){
           </template>
         </create-modal>
 
-        <!-- <BaseButton
-          v-if="can.delete"
-          :route-name="route('role.create')"
-          :icon="mdiPlus"
-          label="Add"
-          color="info"
-          rounded-full
-          small
-        /> -->
+
       </SectionTitleLineWithButton>
       <NotificationBar
         v-if="$page.props.flash.message"

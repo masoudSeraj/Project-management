@@ -22,13 +22,13 @@ use ProtoneMedia\LaravelQueryBuilderInertiaJs\InertiaTable;
 
 class UserController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('can:user list', ['only' => ['index', 'show']]);
-        $this->middleware('can:user create', ['only' => ['create', 'store']]);
-        $this->middleware('can:user edit', ['only' => ['edit', 'update']]);
-        $this->middleware('can:user delete', ['only' => ['destroy']]);
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('can:user list', ['only' => ['index', 'show']]);
+    //     $this->middleware('can:user create', ['only' => ['create', 'store']]);
+    //     $this->middleware('can:user edit', ['only' => ['edit', 'update']]);
+    //     $this->middleware('can:user delete', ['only' => ['destroy']]);
+    // }
 
     /**
      * Display a listing of the resource.
@@ -37,24 +37,6 @@ class UserController extends Controller
      */
     public function index()
     {
-        // $users = (new User)->newQuery();
-
-        // if (request()->has('search')) {
-        //     $users->where('name', 'Like', '%'.request()->input('search').'%');
-        // }
-
-        // if (request()->query('sort')) {
-        //     $attribute = request()->query('sort');
-        //     $sort_order = 'ASC';
-        //     if (strncmp($attribute, '-', 1) === 0) {
-        //         $sort_order = 'DESC';
-        //         $attribute = substr($attribute, 1);
-        //     }
-        //     $users->orderBy($attribute, $sort_order);
-        // } else {
-        //     $users->latest();
-        // }
-
         // $users = $users->paginate(5)->onEachSide(2)->appends(request()->query());
         $globalSearch = AllowedFilter::callback('global', function ($query, $value) {
             $query->where(function ($query) use ($value) {
@@ -115,31 +97,8 @@ class UserController extends Controller
             'roles' => $roles,
         ]);
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\Admin\StoreUserRequest  $request
-     * @param  \App\Actions\Admin\User\CreateUser  $createUser
-     * @return \Illuminate\Http\Response
-     */
-    // public function store(StoreUserRequest $request, CreateUser $createUser)
-    // {
-    //     $createUser->handle($request);
-
-    //     return redirect()->route('user.index')
-    //                     ->with('message', __('User created successfully.'));
-    // }
-
     public function store(Request $request)
     {
-        // $request->whenFilled('user.selectedRoles', function($roles){
-        //     dd($roles);
-        //     // $user->assignRole($roles);
-        // });
-        // dd($request->all());
-
-        // dd($request->all());
         $request->validate([
             'user.name' => ['required', 'string', 'max:255'],
             'user.email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
@@ -153,23 +112,11 @@ class UserController extends Controller
             'user.email.unique'     =>  'Email alredy taken!'
         ]
     );
-
-        // return $request->all();
-        // $user->name = $request->name;
-        // $user->email = $request->email;
-        
-        // $request->filled(['password', 'passwordConfirm'], function() use($user, $request){
-        //     $user->password = bcrypt($request->password);
-        // });
-
-        // $user->save();
-
-        // User::when($request->filled(['password', 'passwordConf']))
         try{
             $user = User::create([
                 'name' =>   $request->input('user.name'),
                 'email' =>  $request->input('user.email'),
-                'password'  =>  $request->input('user.password')
+                'password'  =>  Hash::make($request->input('user.password'))
             ]);
 
             $request->whenFilled('user.selectedRoles', function($roles) use($user){
@@ -182,10 +129,9 @@ class UserController extends Controller
         }
 
         return response()->json([
-            'message'   => 'کاربر با موفقیت ذخیره شد.'
+            'message'   => 'کاربر با موفقیت ذخیره شد.',
+            'userId'    => $user->id
         ]);
-
-        // dd($request->all());
     }
 
 
@@ -198,17 +144,6 @@ class UserController extends Controller
     public function show(User $user)
     {
         return new UserResource($user);
-        // return response()->json([
-        //     'user'  => $user
-        // ]);
-        // $roles = Role::all()->pluck("name","id");
-        // $userHasRoles = array_column(json_decode($user->roles, true), 'id');
-
-        // return Inertia::render('Admin/User/Show', [
-        //     'user' => $user,
-        //     'roles' => $roles,
-        //     'userHasRoles' => $userHasRoles,
-        // ]);
     }
 
     /**
@@ -228,23 +163,6 @@ class UserController extends Controller
             'userHasRoles' => $userHasRoles,
         ]);
     }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\Admin\UpdateUserRequest  $request
-     * @param  \App\Models\User  $user
-     * @param  \App\Actions\Admin\User\UpdateUser  $updateUser
-     * @return \Illuminate\Http\Response
-     */
-    // public function update(UpdateUserRequest $request, User $user, UpdateUser $updateUser)
-    // {
-    //     $updateUser->handle($request, $user);
-
-    //     return redirect()->route('user.index')
-    //                     ->with('message', __('User updated successfully.'));
-    // }
-
     public function update(Request $request, User $user)
     {
         try{
@@ -260,19 +178,6 @@ class UserController extends Controller
             });
 
             $user->save();
-            // $user
-            // ->when($request->filled(['password', 'passwordConfirm']), function($query) use($request){
-            //     return $query->update([
-            //         'name'  => $request->name,
-            //         'email' => $request->email,
-            //         'password'  => bcrypt($request->password)
-            //     ]);
-            // }, function($query) use($request){
-            //     return $query->update([
-            //         'name'  => $request->name,
-            //         'email' => $request->email,
-            //     ]);
-            // });
         }
         catch(\Exception $e){
             abort(500, 'مشکلی در ویرایش کاربر پیش آمد.');
@@ -280,11 +185,6 @@ class UserController extends Controller
         return response()->json([
             'message'   =>  'عملیات ویرایش موفقیت آمیز بود.'
         ]);
-        // dd($request);
-        // $updateUser->handle($request, $user);
-
-        // return redirect()->route('user.index')
-        //                 ->with('message', __('User updated successfully.'));
     }
 
     /**
@@ -308,8 +208,6 @@ class UserController extends Controller
         return response()->json([
             'message'   =>  'کاربر با موفقیت حذف شد.'
         ]);
-        // return redirect()->route('user.index')
-        //                 ->with('message', __('User deleted successfully'));
     }
 
     /**

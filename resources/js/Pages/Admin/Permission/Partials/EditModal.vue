@@ -44,8 +44,7 @@ export default {
     methods: {
         updatePermission(permissionId) {
             axios
-                .post(route("admin.permission.updatePermission"), {
-                    permissionId: permissionId,
+                .put(route("permission.update", {'permission': permissionId}), {
                     permissionName: this.permissionName,
                 })
                 .then((response) => {

@@ -2,14 +2,15 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Database\Eloquent\Factories\Sequence;
 use Tests\TestCase;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Permission;
+use Inertia\Testing\AssertableInertia;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 
 class RolesTest extends TestCase
 {
@@ -19,7 +20,7 @@ class RolesTest extends TestCase
     public function test_admin_can_visit_roles_page()
     {
         $user = User::factory()->create();
-        $role = Role::create(['name' => 'admin']);
+        $role = Role::create(['name' => 'admin', 'is_admin' => 1]);
         $user->assignRole([$role->name]);
 
         $this->actingAs($user)->get('admin/role')->assertStatus(200);
@@ -28,7 +29,7 @@ class RolesTest extends TestCase
     public function test_not_admin_can_not_visit_roles_page()
     {
         $user = User::factory()->create();
-        Role::create(['name' => 'user']);
+        Role::create(['name' => 'user', 'is_admin' => 1]);
         $user->assignRole('user');
 
         $this->actingAs($user)->get('admin/role')->assertRedirect(route('home'));
@@ -37,7 +38,7 @@ class RolesTest extends TestCase
     public function test_admin_can_create_new_role_without_assigning_permission()
     {
         $user = User::factory()->create();
-        $role = Role::create(['name' => 'admin']);
+        $role = Role::create(['name' => 'admin', 'is_admin' => 1]);
         $user->assignRole($role->name);
 
         $params = ['roleName' => 'administrator', 'isAdmin' => 1];
@@ -52,7 +53,7 @@ class RolesTest extends TestCase
     public function test_admin_can_create_new_role_with_assigning_permissions()
     {
         $user = User::factory()->create();
-        $role = Role::create(['name' => 'admin']);
+        $role = Role::create(['name' => 'admin', 'is_admin' => 1]);
         $user->assignRole($role->name);
 
         $permissions = Permission::factory()->state(
@@ -80,7 +81,7 @@ class RolesTest extends TestCase
     public function test_admin_can_edit_roles_without_assigning_permissions()
     {
         $user = User::factory()->create();
-        $role = Role::create(['name' => 'admin']);
+        $role = Role::create(['name' => 'admin', 'is_admin' => 1]);
         $user->assignRole($role->name);
 
         $role1 = Role::create(['name' => 'role1', 'is_admin' => 1]);
@@ -98,7 +99,7 @@ class RolesTest extends TestCase
     public function test_admin_can_edit_roles_with_assigning_permissions()
     {
         $user = User::factory()->create();
-        $role = Role::create(['name' => 'admin']);
+        $role = Role::create(['name' => 'admin', 'is_admin' => 1]);
         $user->assignRole($role->name);
 
         $permissions = Permission::factory()->state(
@@ -134,7 +135,7 @@ class RolesTest extends TestCase
     public function test_admin_can_remove_role()
     {
         $user = User::factory()->create();
-        $role = Role::create(['name' => 'admin']);
+        $role = Role::create(['name' => 'admin', 'is_admin' => 1]);
         $user->assignRole($role->name);
 
         $role1 = Role::create(['name' => 'role1', 'is_admin' => 1]);
@@ -164,5 +165,46 @@ class RolesTest extends TestCase
                 ]
             );
         });
+    }
+
+    public function test_roles_are_displayed_in_index_page()
+    {
+        $user = User::factory()->create();
+        Role::create(['name' => 'admin', 'is_admin' => 1]);
+        $user->assignRole('admin');
+
+        Role::create(['name' => 'helper', 'guard_name' => 'web', 'is_admin' => 1]);
+        Role::create(['name' => 'user', 'guard_name' => 'web', 'is_admin' => 0]);
+
+        $this->actingAs($user)->get('admin/role')
+            ->assertInertia(function(AssertableInertia $page) {
+                $page->component('Admin/Role/Index') 
+                    ->has('roles', function(AssertableInertia $page){
+                        $page
+                            ->has('data', 3)
+                            ->has('data.0', function(AssertableInertia $page){
+                                $page
+                                    ->where('name', 'admin')
+                                    ->where('is_admin', 1)
+                                    ->etc();
+
+                            })
+                            ->has('data.1', function(AssertableInertia $page){
+                                $page
+                                    ->where('name', 'helper')
+                                    ->where('is_admin', 1)
+                                    ->etc();
+
+                            })
+                            ->has('data.2', function(AssertableInertia $page){
+                                $page
+                                    ->where('name', 'user')
+                                    ->where('is_admin', 0)
+                                    ->etc();
+
+                            })
+                            ->etc();                            
+                    });
+            });
     }
 }

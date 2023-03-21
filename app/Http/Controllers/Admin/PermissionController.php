@@ -157,10 +157,9 @@ class PermissionController extends Controller
         return response()->json(['permission' => Permission::find($request->id)]);
     }
 
-    public function updatePermission(Request $request)
+    public function update(Permission $permission, Request $request)
     {
         try{
-            $permission = Permission::find($request->permissionId);
             $permission->name = $request->permissionName;
             $permission->save();
         }

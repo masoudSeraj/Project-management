@@ -8,9 +8,9 @@ import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.
 import NotificationBar from "@/Components/NotificationBar.vue";
 import { Inertia } from '@inertiajs/inertia';
 import { Table } from "@protonemedia/inertiajs-tables-laravel-query-builder";
-import TableRow from "@/Components/Custom/TableRow.vue";
+import TableRow from "@/Pages/Admin/Permission/Partials/TableRow.vue";
 import { PlusOutlined } from '@ant-design/icons-vue';
-import CreateModal from '@/Components/Custom/CreateModal.vue';
+import CreateModal from '@/Pages/Admin/Permission/Partials/CreateModal.vue';
 import {
   mdiAccountKey
 } from "@mdi/js"

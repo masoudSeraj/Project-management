@@ -21,7 +21,7 @@ class PermissionTest extends TestCase
     public function test_admin_can_visit_permissions_page()
     {
         $user = User::factory()->create();
-        Role::create(['name' => 'admin']);
+        Role::create(['name' => 'admin', 'is_admin' => 1]);
         $user->assignRole('admin');
 
         $this->actingAs($user)->get('admin/permission')->assertStatus(200);
@@ -30,7 +30,7 @@ class PermissionTest extends TestCase
     public function test_not_admin_can_not_visit_permissions_page()
     {
         $user = User::factory()->create();
-        Role::create(['name' => 'user']);
+        Role::create(['name' => 'user', 'is_admin' => 1]);
         $user->assignRole('user');
 
         $this->actingAs($user)->get('admin/permission')->assertRedirect(route('home'));
@@ -39,18 +39,48 @@ class PermissionTest extends TestCase
     public function test_admin_can_add_new_permission()
     {
         $user = User::factory()->create();
-        Role::create(['name' => 'admin']);
-        $user->assignRole('admin');
+        $role = Role::create(['name' => 'admin', 'is_admin' => 1]);
+        $user->assignRole($role->name);
 
-        Permission::create(['name' => 'creation', 'guard_name' => 'web']);
+        $params = ['permissionName' => 'perm1'];
+        $response = $this->actingAs($user)->post(route('permission.store', $params));
+        $response->assertStatus(200);
 
-        $this->assertDatabaseHas('permissions', ['name' => 'creation', 'guard_name' => 'web']);
+        $this->assertDatabaseHas('permissions', ['name' => 'perm1', 'guard_name' => 'web']);
+    }
+
+    public function test_admin_can_edit_permission()
+    {
+        $user = User::factory()->create();
+        $role = Role::create(['name' => 'admin', 'is_admin' => 1]);
+        $user->assignRole($role->name);
+
+        $permission = Permission::create(['name' => 'perm1']);
+        $params = ['permissionId' => $permission->id,'permissionName' => 'perm2'];
+        $response = $this->actingAs($user)->put(route('permission.update', ['permission' => $permission->id]), $params);
+        $response->assertStatus(200);
+
+        $this->assertDatabaseHas('permissions', [
+            'id'    => $permission->id,
+            'name'  =>  'perm2'
+        ]);
+    }
+    public function test_admin_can_delete_permission()
+    {
+        $user = User::factory()->create();
+        $role = Role::create(['name' => 'admin', 'is_admin' => 1]);
+        $user->assignRole($role->name);
+
+        $permission = Permission::create(['name' => 'perm1']);
+        $response = $this->actingAs($user)->delete(route('permission.destroy', ['permission' => $permission->id]));
+        $response->assertStatus(200);
+        $this->assertDatabaseMissing('permissions', ['name' => 'perm1']);
     }
 
     public function test_permissions_are_displayed_in_page()
     {
         $user = User::factory()->create();
-        Role::create(['name' => 'admin']);
+        Role::create(['name' => 'admin', 'is_admin' => 1]);
         $user->assignRole('admin');
 
         Permission::create(['name' => 'creation', 'guard_name' => 'web']);
@@ -78,16 +108,5 @@ class PermissionTest extends TestCase
                             ->etc();
                     });
         });
-    }
-
-    public function test_permission_can_be_edited()
-    {
-        $user = User::factory()->create();
-        Role::create(['name' => 'admin']);
-        $user->assignRole('admin');
-
-        $permission = Permission::create(['name' => 'creation', 'guard_name' => 'web']);
-        Permission::find($permission->id)->update(['name' => 'deletion']);
-        $this->assertDatabaseHas('permissions',  ['name' => 'deletion']);
     }
 }
