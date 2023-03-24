@@ -108,12 +108,12 @@ export default {
                 status: this.status
             }).then(response => {
                 notification.success({
-                        message: response.data.message,
-                    });
+                    message: response.data.message,
+                });
             }).catch(error => {
                 notification.message({
-                        message: error.response.data.message,
-                    });
+                    message: error.response.data.message,
+                });
             })
         },
 

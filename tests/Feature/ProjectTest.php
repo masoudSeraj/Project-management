@@ -91,14 +91,14 @@ class ProjectTest extends TestCase
         $response = $this->actingAs($user)->getJson(route('project.show', ['project' => $project->id]));
 
         $response
-        ->assertJson(fn (AssertableJson $json) =>
-                $json
-                ->has('tasks', 3)
-                ->where('tasks.0.title', 'title1')
-                ->where('tasks.1.title', 'title2')
-                ->where('tasks.2.title', 'title3')
-                ->etc()
-        );
+            ->assertJson(fn (AssertableJson $json) =>
+                    $json
+                    ->has('tasks', 3)
+                    ->where('tasks.0.title', 'title1')
+                    ->where('tasks.1.title', 'title2')
+                    ->where('tasks.2.title', 'title3')
+                    ->etc()
+            );
         $response->assertStatus(200);
         
         $response->assertJsonStructure(
@@ -117,5 +117,31 @@ class ProjectTest extends TestCase
             ]
         );
     }
+    public function test_admin_can_edit_projects()
+    {
+        $user = User::factory()->create();
+        Role::create(['name' => 'admin', 'is_admin' => 1]);
+        $user->assignRole('admin');
 
+        $project = Project::factory()->state(['title' => 'project2'])
+        ->has(
+            Task::factory()
+            ->state(new Sequence(['title' => 'title1'], ['title' => 'title2'], ['title' => 'title3']))
+            ->count(3)
+        )
+        ->create();
+        $params = [
+            'projectName'   => 'Changed Project',
+            'tasks' => [
+                'id'    =>  $project->tasks->first()->id,
+                'title' => 'Changed title1'
+            ],
+            'projectDescription'    => 'Changed Description',
+            'date' => now()->addDays(10),
+            'status'    => 'completed'
+        ];
+        $response = $this->actingAs($user)->postJson(route('project.update', ['project' => $project->id]), $params);
+        $response->assertStatus(200);
+
+    }
 }

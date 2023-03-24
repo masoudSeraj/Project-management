@@ -19,9 +19,9 @@ class ProjectFactory extends Factory
     public function definition()
     {
         $timestamps = (new DateService)
-        ->randomTimeFromTimestamp(2)
-        ->sortAsc()
-        ->setCustomKeys(['changed_at', 'deadline_at']);
+            ->randomTimeFromTimestamp(2)
+            ->sortAsc()
+            ->setCustomKeys(['changed_at', 'deadline_at']);
 
         
         return [
