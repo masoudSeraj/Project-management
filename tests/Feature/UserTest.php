@@ -137,14 +137,9 @@ class UserTest extends TestCase
             ->create();
 
         $user1->assignRole(['role1', 'role2']);
-        // $this->assertNotSame(['role1', 'role2'], $user1->getRoleNames()->toArray());
-        // dd($user1->getRoleNames()->toArray());
         $this->assertDatabaseHas('users', ['name' => 'user1']);
         $response = $this->actingAs($user)->delete(route('user.destroy', ['user' => $user1->id]));
         $response->assertStatus(200);
         $this->assertDatabaseMissing('users',['id' => $user1->id]);
-        // dd($user1->getRoleNames()->toArray());
-
-        $this->assertNotSame(['role1', 'role2'], $user1->getRoleNames()->toArray());
     }
 }

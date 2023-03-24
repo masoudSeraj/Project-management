@@ -92,14 +92,13 @@ class ProjectController extends Controller
         }
 
         return response()->json([
-            'message'   =>  'Successfully created'
+            'message'   =>  'Successfully created',
+            'projectId' => $project->id
         ]);
     }
 
     public function show(Project $project)
     {
-        // dd($project->tasks()->select('title')->get()->toArray());
-        // dd($request);
         return response()->json([
             'tasks'    => $project->tasks()->select('title', 'id')->get()->toArray(),
             'projectName'   => $project->title,
