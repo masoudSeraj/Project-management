@@ -140,7 +140,7 @@ class ProjectTest extends TestCase
             'date' => now()->addDays(10),
             'status'    => 'completed'
         ];
-        $response = $this->actingAs($user)->postJson(route('project.update', ['project' => $project->id]), $params);
+        $response = $this->actingAs($user)->put(route('project.update', ['project' => $project->id]), $params);
         $response->assertStatus(200);
 
     }
