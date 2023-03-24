@@ -5,7 +5,7 @@ In this project you will learn how to use:
 - Simple api resources
 - How to do autocompletion using Ant vue components
 - How to use Vue components effectively
-- how to use Inertia tables develped by [Pascal Baljet](https://github.com/protonemedia/inertiajs-tables-laravel-query-builder).
+- How to use Inertia tables develped by [Pascal Baljet](https://github.com/protonemedia/inertiajs-tables-laravel-query-builder).
 - Write simple and complex PHPUNIT tests
 - How to use PHP factories for testing
 - Some aspects of clean code and clean archtiecture using OOP
