@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Database\Eloquent\Factories\Sequence;
+use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 use App\Models\Role;
 use App\Models\Task;
@@ -123,6 +124,7 @@ class ProjectTest extends TestCase
         Role::create(['name' => 'admin', 'is_admin' => 1]);
         $user->assignRole('admin');
 
+        $date = now()->addDays(10);
         $project = Project::factory()->state(['title' => 'project2'])
         ->has(
             Task::factory()
@@ -133,15 +135,61 @@ class ProjectTest extends TestCase
         $params = [
             'projectName'   => 'Changed Project',
             'tasks' => [
-                'id'    =>  $project->tasks->first()->id,
-                'title' => 'Changed title1'
-            ],
+                [
+                    'id'    =>  $project->tasks->first()->id,
+                    'title' => 'Changed title1'
+                ]
+        ],
             'projectDescription'    => 'Changed Description',
-            'date' => now()->addDays(10),
+            'date' => $date,
             'status'    => 'completed'
         ];
         $response = $this->actingAs($user)->put(route('project.update', ['project' => $project->id]), $params);
         $response->assertStatus(200);
+        $this->assertDatabaseHas('projects', [
+            'id'   => $project->id,
+            'title' => 'Changed Project',
+            'description'   => 'Changed Description',
+            'deadline_at'  => $date,
+            'status'    => 'completed'
+        ]);
+        // dd($project->tasks->toArray());
+        $project->tasks->each(fn($task, $key) =>
+              $this->assertDatabaseHas('tasks', [
+                'project_id' => $project->id,
+                'title' =>  'Changed title1'
+              ])
+        );
+    }
 
+    public function test_projects_are_displayed_in_page(){
+        $user = User::factory()->create();
+        Role::create(['name' => 'admin', 'is_admin' => 1]);
+        $user->assignRole('admin');
+        
+        // Task::create(['title' => 'task1', 'guard_name' => 'web']);
+        // Task::create(['title' => 'task2', 'guard_name' => 'web']);
+
+        $date = now()->addDays(10);
+        $project = Project::factory()->state(['title' => 'project2'])
+        ->has(
+            Task::factory()
+            ->state(new Sequence(['title' => 'title1'], ['title' => 'title2'], ['title' => 'title3']))
+            ->count(3)
+        )
+        ->create();
+
+        $this->actingAs($user)->get(route('project.index'))->assertStatus(200);
+        
+        $this->actingAs($user)->get(route('project.index'))->assertInertia(function(AssertableInertia $page) use($project){
+            $page->component('Admin/Project/Index')
+                ->has('projects', function(AssertableInertia $page) use($project){
+                    $page
+                        ->has('data', 1)
+                        ->where('data.0.title', 'project2')
+                        ->etc();
+                })
+                ->etc();
+        });
     }
 }

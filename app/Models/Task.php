@@ -37,4 +37,15 @@ class Task extends Model
     {
         return $this->belongsTo(Sprint::class);
     }
+
+    public function taskHasDependency()
+    {   
+        return $this->parentTask()->exists();
+    }
+
+    public function parentTaskNotFinished()
+    {
+        return $this->parentTask->status != 'Active';
+    }
+
 }

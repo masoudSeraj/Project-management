@@ -3,7 +3,7 @@
         v-model:value="value"
         mode="multiple"
         style="width: 100%"
-        placeholder="Please select"
+        placeholder="Please select users to assign tasks"
         :options="users"
         @change="handleChange"
     ></a-select>

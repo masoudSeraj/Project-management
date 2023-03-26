@@ -79,27 +79,6 @@ class TaskController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  int  $id
@@ -107,51 +86,24 @@ class TaskController extends Controller
      */
     public function show(Task $task, Request $request)
     {
-        // dd($task);
-        // return response()->json([
-        //     'taskDescription'   => $task->description,
-        //     'taskName'          =>  $task->title,
-        //     'date'              =>  $task->date,
-        //     'status'            =>  $task->status
-        // ]);
-
         return new TaskResource($task);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function update(Request $request, Task $task)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Task $task, TaskDependencyFinder $finder)
-    {
-        // dd(collect($request->value)->pluck('id'));
-        // dd($request->all());
         try{
             $request->validate([
-                'value.*'    => 'nullable',
+                'value.*'       => 'nullable',
                 'started_at'    => 'nullable',
                 'paused_at'     => ['nullable', Rule::requiredIf(isset($request->paused_at))],
                 'started_at'    => ['nullable', Rule::requiredIf(isset($request->started_at))],
-                'deadline'       =>  'required',
-                'status'        =>  'required'
+                'deadline'      => 'required',
+                'status'        => 'required'
             ]);
     
             $task->title = $request->taskName;
             $task->description = $request->taskDescription;
+
             $request->whenFilled($request->started_at, function() use($task, $request){
                 $task->started_at = $request->started_at;
             })->whenFilled($request->paused_at, function() use($task, $request){
@@ -162,8 +114,8 @@ class TaskController extends Controller
             
             $task->deadline_at = $request->deadline;
 
-            $request->whenFilled('started_at', function() use($finder, $task){
-                if($finder->taskHasDependency($task)){                    
+            $request->whenFilled('started_at', function() use($task){
+                if($task->taskHasDependency()){                    
                     throw new TaskHasDependencyException('The task has dependencies', 500);
                 };
             });

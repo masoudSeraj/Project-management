@@ -55,7 +55,6 @@ class ProjectController extends Controller
                 label: 'title',
                 canBeHidden: true,
                 hidden: false,
-                sortable: true,
             )
             ->withGlobalSearch()
             ->defaultSort('name');
@@ -129,10 +128,14 @@ class ProjectController extends Controller
 
             
             collect($request->tasks)->each(function($task) use($project){
-               $project->tasks()->updateOrCreate(
-                ['id' => $task['id'] ?? null],
-                ['title'  => $task['title']]
-            );
+                // $project->tasks()->updateOrCreate(
+                //     ['id' => $task['id'] ?? null],
+                //     ['title'  => $task['title']]
+                // );
+                $project->tasks()->delete();
+                $project->tasks()->create([
+                    'title' => $task['title']
+                ]);
             });
                         
 

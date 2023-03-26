@@ -26,12 +26,13 @@ class TaskFactory extends Factory
 
         return [
             'project_id'    => Project::factory(),
-            'title'     =>  fake()->text(rand(5, 8)),
+            'title'         =>  fake()->text(rand(5, 8)),
             'description'   =>  fake()->text(rand(8, 15)),
             'status'        =>  ['active', 'completed', 'suspended'][rand(0,2)],
             'deadline_at'   =>  Carbon::createFromTimestamp($timestamps['end'])->toDateTimeString(),
-            'started_at'   =>  Carbon::createFromTimestamp($timestamps['start'])->toDateTimeString(),
-            'paused_at'    =>  rand(0, 1) ? Carbon::createFromTimestamp($timestamps['paused'])->toDateTimeString() : null
+            'started_at'    =>  Carbon::createFromTimestamp($timestamps['start'])->toDateTimeString(),
+            'paused_at'     =>  rand(0, 1) ? Carbon::createFromTimestamp($timestamps['paused'])->toDateTimeString() : null,
+            'sprint_id'     =>  null
         ];
     }
 }

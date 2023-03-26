@@ -56,11 +56,11 @@ function taskCreate(){
         main
       >
 
-      <create-modal title="Add" @taskCreated="taskCreate">
+      <!-- <create-modal title="Add" @taskCreated="taskCreate">
           <template #icon>
             <plus-outlined />
           </template>
-        </create-modal>
+      </create-modal> -->
 
       </SectionTitleLineWithButton>
       <NotificationBar
