@@ -18,11 +18,10 @@ class ProjectFactory extends Factory
      */
     public function definition()
     {
-        $timestamps = (new DateService)
-            ->randomTimeFromTimestamp(2)
-            ->sortAsc()
-            ->setCustomKeys(['changed_at', 'deadline_at']);
+        DateService::setCustomKeys(['changed_at', 'deadline_at']);
 
+        $timestamps = (new DateService)
+            ->randomTimestamp(2);
         
         return [
             'title' => fake()->text(rand(5, 8)),

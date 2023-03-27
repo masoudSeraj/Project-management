@@ -63,13 +63,13 @@
                 <user-task v-model="selectedUsers" :taskId="id" @user-selected="userSelected"></user-task>
                 
 
-                <template v-if="!started_at">
+                <template v-if="!started_at && paused_at">
                     <caret-right-outlined @click="start(id)" :style="{fontSize: '100px', color: '#08c', cursor: 'pointer'}"/>
-                    <div class="flex"><span>در تاریخ <span v-text="convertDate(paused_at)"></span> متوقف شده است</span>   </div>
+                    <div class="flex"><span>Task paused at <span>  {{ convertDate(paused_at) }} </span></span>   </div>
                 </template>
                 <template v-else>
                     <pause-outlined @click="pause(id)" :style="{fontSize: '100px', color: 'yellow', cursor: 'pointer'}"/>
-                    <div class="flex"><span>در تاریخ <span v-text="convertDate(started_at)"></span> آغاز شده است</span>   </div>
+                    <div class="flex"><span>Task Started at <span>{{ convertDate(started_at) }}</span></span>   </div>
                 </template>
             </div>
         </section>
@@ -113,7 +113,6 @@ export default {
                 .get(route("task.show", { task: taskId }))
                 .then((response) => {
                     const data = response.data.data;
-                    console.log(data)
                     this.taskDescription = data.description;
                     this.taskName = data.title;
                     this.deadline = data.deadline_at;
@@ -126,7 +125,6 @@ export default {
                 });
         },
         update(taskId){
-            console.log(this)
             axios.put(route('task.update', {task: taskId}), {
                 value: this.value,
                 taskDescription: this.taskDescription,
