@@ -49,13 +49,13 @@
             </div>
 
             <div class="w-1/2">
-                <div class="mr-1 mb-2"><span class="text-red-500">*</span> Tasks:</div>
+                <div class="mr-1 mb-2"> Tasks:</div>
                 
                   <a-select
                     v-model:value="value"
                     mode="multiple"
                     style="width: 100%"
-                    placeholder="Please select tasks"
+                    placeholder="Please select tasks which are dependent to this"
                     :options="tasks"
                     @change="handleChange"
                 ></a-select>
@@ -63,11 +63,12 @@
                 <user-task v-model="selectedUsers" :taskId="id" @user-selected="userSelected"></user-task>
                 
 
-                <template v-if="!started_at && paused_at">
+                <template v-if="started_at && paused_at || !started_at">
                     <caret-right-outlined @click="start(id)" :style="{fontSize: '100px', color: '#08c', cursor: 'pointer'}"/>
-                    <div class="flex"><span>Task paused at <span>  {{ convertDate(paused_at) }} </span></span>   </div>
+                    <div class="flex" v-if="started_at"><span>Task paused at <span>  {{ convertDate(paused_at) }} </span></span>   </div>
+                    <div class="flex" v-if="!started_at"><span>Task Not started yet, click on the start button to start it</span>   </div>
                 </template>
-                <template v-else>
+                <template v-else-if="started_at && !paused_at">
                     <pause-outlined @click="pause(id)" :style="{fontSize: '100px', color: 'yellow', cursor: 'pointer'}"/>
                     <div class="flex"><span>Task Started at <span>{{ convertDate(started_at) }}</span></span>   </div>
                 </template>
@@ -176,7 +177,7 @@ export default {
             this.status = value;
         },
         convertDate(date){
-            return date ? moment(date).format('jYYYY/jM/jD h:m:s') : '';
+            return date ? moment(date).format('jYYYY/jMM/jDD HH:mm:ss') : '';
         }
     },
     mounted(){console.log('yes')},

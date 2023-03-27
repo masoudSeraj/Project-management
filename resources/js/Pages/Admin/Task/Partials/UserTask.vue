@@ -1,4 +1,5 @@
 <template>
+    <div class="mr-1 mb-2"> Users:</div>
     <a-select
         v-model:value="value"
         mode="multiple"
