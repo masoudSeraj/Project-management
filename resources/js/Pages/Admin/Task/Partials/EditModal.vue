@@ -160,18 +160,23 @@ export default {
             console.log(this.selectedUsers);
         },
         start(taskId){
-            axios.get(route('task.start', {task: taskId})).then(response => {
+            if(confirm("Are you sure to Start the project") == true){
+                axios.get(route('task.start', {task: taskId})).then(response => {
                 this.taskStarted = response.data.taskStarted
                 this.started_at = response.data.date;
                 this.paused_at = ''
             });
+            }
+
         },
         pause(taskId){
-            axios.get(route('task.stop', {task: taskId})).then(response => {
+            if(confirm("Are you sure to Pause the project") == true){
+                axios.get(route('task.stop', {task: taskId})).then(response => {
                 this.taskStarted = response.data.taskStarted;
                 this.paused_at = response.data.date;
                 this.started_at = ''
-            });
+                });
+            }
         },
         selectStatus(value){
             this.status = value;
